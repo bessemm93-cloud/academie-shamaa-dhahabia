@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكم | أكاديمية شمعة ذهبية</title>
+<style>
+body{margin:0;background:#090909;color:#fff;font-family:Tahoma,Arial,sans-serif}.wrap{width:min(1100px,92%);margin:40px auto}
+.box{background:#151515;border:1px solid #333;border-radius:18px;padding:24px;margin-bottom:20px}h1,h2{color:#e6c65b}input{width:100%;box-sizing:border-box;background:#0b0b0b;border:1px solid #333;color:#fff;padding:13px;border-radius:10px;margin:8px 0 14px}.btn{padding:12px 18px;border-radius:10px;border:1px solid #d4af37;background:#d4af37;color:#111;font-weight:800;cursor:pointer}.danger{background:#421313;color:#fff;border-color:#8a3333}.hidden{display:none}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.item{border-top:1px solid #292929;padding:15px 0}.muted{color:#aaa}
+</style></head>
+<body><div class="wrap">
+<div class="box" id="login">
+<h1>لوحة تحكم المالك</h1><p class="muted">هذه النسخة التجريبية تحفظ طلبات التسجيل داخل المتصفح فقط.</p>
+<input id="pass" type="password" placeholder="كلمة المرور">
+<button class="btn" onclick="login()">دخول</button>
+<p id="err" style="color:#e88"></p>
+</div>
+<div id="panel" class="hidden">
+<div class="box row"><div><h1>طلبات التسجيل</h1><p class="muted">أكاديمية شمعة ذهبية</p></div><button class="btn danger" onclick="clearAll()">حذف جميع الطلبات</button></div>
+<div class="box" id="regs"></div>
+</div></div>
+<script>
+const PASSWORD="123456";
+function login(){if(document.getElementById("pass").value===PASSWORD){document.getElementById("login").classList.add("hidden");document.getElementById("panel").classList.remove("hidden");render()}else document.getElementById("err").textContent="كلمة المرور غير صحيحة."}
+function render(){const data=JSON.parse(localStorage.getItem("academyRegistrations")||"[]");const box=document.getElementById("regs");if(!data.length){box.innerHTML="<p class='muted'>لا توجد طلبات تسجيل حالياً.</p>";return}box.innerHTML=data.map((x,i)=>`<div class="item"><b>${i+1}. ${x.name}</b><br>الدورة: ${x.course}<br>الهاتف: ${x.phone}<br>الملاحظة: ${x.note||"—"}<br><span class="muted">${x.date}</span></div>`).join("")}
+function clearAll(){if(confirm("هل تريد حذف جميع الطلبات؟")){localStorage.removeItem("academyRegistrations");render()}}
+</script></body></html>
