@@ -52,19 +52,6 @@ section{padding:75px 0}
 .cta{background:linear-gradient(120deg,#1a160b,#0e0e0e);border:1px solid rgba(212,175,55,.3);border-radius:28px;padding:38px;text-align:center}
 footer{border-top:1px solid #222;padding:28px 0;color:#aaa;text-align:center}
 footer strong{color:var(--gold2)}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;padding:18px}
-.modal.show{display:flex}
-.modal-box{width:min(700px,100%);max-height:92vh;overflow:auto;background:#111;border:1px solid rgba(212,175,55,.45);border-radius:22px;padding:25px}
-.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #292929;padding-bottom:16px;margin-bottom:18px}
-.close{background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
-.price-big{font-size:27px;color:var(--gold2);font-weight:900}
-.form{display:grid;gap:13px}
-label{font-size:14px;color:#ddd}
-input,textarea{width:100%;background:#0b0b0b;border:1px solid #333;color:#fff;padding:13px 14px;border-radius:11px;outline:none}
-input:focus,textarea:focus{border-color:var(--gold)}
-.notice{padding:14px;border-radius:12px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);color:#ddd;font-size:14px}
-.req{margin-top:12px}
-.success{display:none;padding:15px;border-radius:12px;background:#102616;border:1px solid #2d7d44;color:#b9f3c8}
 @media(max-width:900px){.hero-grid{grid-template-columns:1fr}.courses{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}nav{display:none}}
 @media(max-width:600px){.courses,.info-grid{grid-template-columns:1fr}.nav{min-height:68px}.brand span{font-size:15px}.hero{padding-top:45px}section{padding:55px 0}.cta{padding:25px}}
 </style>
@@ -111,33 +98,16 @@ input:focus,textarea:focus{border-color:var(--gold)}
 
 <section id="contact">
 <div class="container">
-<div class="cta"><h2>هل وجدت الدورة المناسبة لك؟</h2><p style="color:#bbb;margin:10px 0 20px">ابدأ التسجيل واختر الدورة التي تريدها.</p><a class="btn" href="#courses">سجل الآن</a></div>
+<div class="cta"><h2>هل وجدت الدورة المناسبة لك؟</h2><p style="color:#bbb;margin:10px 0 20px">ابدأ التسجيل واختر الدورة التي تريدها.</p><a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSf7pw0rbRSYeFoR1DaQMNVK6X20M2PLViy824D1bAKtQBYRtw/viewform?usp=dialog" target="_blank" rel="noopener">سجل الآن</a></div>
 </div>
 </section>
 </main>
 
 <footer><div class="container">© <span id="year"></span> <strong>أكاديمية شمعة ذهبية</strong> — جميع الحقوق محفوظة</div></footer>
 
-<div class="modal" id="courseModal">
-<div class="modal-box">
-<div class="modal-head">
-<div><h2 id="modalTitle"></h2><div class="price-big" id="modalPrice"></div></div>
-<button class="close" onclick="closeModal()">×</button>
-</div>
-<div class="notice">📚 الدراسة مرتين في الأسبوع. عند التسجيل، أحضر الوثائق المطلوبة المذكورة أدناه.</div>
-<form class="form" id="registrationForm" style="margin-top:18px">
-<input type="hidden" id="courseField">
-<div><label>الاسم واللقب</label><input id="name" required placeholder="اكتب الاسم واللقب"></div>
-<div><label>رقم الهاتف</label><input id="phone" required inputmode="tel" placeholder="مثال: 06xxxxxxxx"></div>
-<div><label>ملاحظة (اختياري)</label><textarea id="note" rows="3" placeholder="أي ملاحظة أو سؤال"></textarea></div>
-<div class="notice req"><strong>الوثائق المطلوبة:</strong> شهادة ميلاد + صورة شمسية + نسخة من بطاقة التعريف + 100 ألف دج حقوق التسجيل.</div>
-<button class="btn" type="submit">إرسال طلب التسجيل</button>
-<div class="success" id="success">تم تسجيل طلبك على هذا الجهاز بنجاح. تواصل مع الأكاديمية على 0698609081 لتأكيد التسجيل.</div>
-</form>
-</div>
-</div>
-
 <script>
+const FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLSf7pw0rbRSYeFoR1DaQMNVK6X20M2PLViy824D1bAKtQBYRtw/viewform?usp=dialog";
+
 const courses=[
 ["💻","الإعلام الآلي","مليون ومئتا ألف دج"],
 ["👶","مربية أطفال","تسعمئة ألف دج"],
@@ -155,21 +125,21 @@ const courses=[
 ["🎂","Layer Cake","ثمانمئة ألف دج"],
 ["🌍","تعليم اللغات","مئتا ألف دج / كل شهر"]
 ];
+
 const list=document.getElementById("courseList");
-courses.forEach((c,i)=>{
-const el=document.createElement("article");el.className="card";
-el.innerHTML=`<div class="icon">${c[0]}</div><h3>${c[1]}</h3><small>دورة تدريبية</small><div class="price">${c[2]}</div><button class="btn" onclick="openModal(${i})">التسجيل في الدورة</button>`;
+
+courses.forEach(c=>{
+const el=document.createElement("article");
+el.className="card";
+el.innerHTML=`
+<div class="icon">${c[0]}</div>
+<h3>${c[1]}</h3>
+<small>دورة تدريبية</small>
+<div class="price">${c[2]}</div>
+<a class="btn" href="${FORM_URL}" target="_blank" rel="noopener">التسجيل في الدورة</a>`;
 list.appendChild(el);
 });
-function openModal(i){document.getElementById("courseModal").classList.add("show");document.getElementById("modalTitle").textContent=courses[i][1];document.getElementById("modalPrice").textContent=courses[i][2];document.getElementById("courseField").value=courses[i][1];document.body.style.overflow="hidden"}
-function closeModal(){document.getElementById("courseModal").classList.remove("show");document.body.style.overflow=""}
-document.getElementById("courseModal").addEventListener("click",e=>{if(e.target.id==="courseModal")closeModal()});
-document.getElementById("registrationForm").addEventListener("submit",e=>{
-e.preventDefault();
-const item={course:document.getElementById("courseField").value,name:document.getElementById("name").value,phone:document.getElementById("phone").value,note:document.getElementById("note").value,date:new Date().toLocaleString("ar-DZ")};
-const data=JSON.parse(localStorage.getItem("academyRegistrations")||"[]");data.push(item);localStorage.setItem("academyRegistrations",JSON.stringify(data));
-document.getElementById("success").style.display="block";e.target.querySelector("button[type=submit]").style.display="none";
-});
+
 document.getElementById("year").textContent=new Date().getFullYear();
 </script>
 </body>
